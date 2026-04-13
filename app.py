@@ -53,4 +53,4 @@ def predict():
     return render_template("index.html", prediction = result, probability = round(prob, 2), recommendation = rec)
 
 if __name__ == "__main__":
-    app.run(debug= True)
+    app.run(debug= True, use_reloader = True)
