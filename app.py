@@ -1,9 +1,10 @@
 import streamlit as st
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import numpy as np
 import pickle
 from utils.recommend import get_recommendation
 import pandas as pd
+from chatbot import ask_ai
 
 app = Flask(__name__)
 
@@ -48,10 +49,37 @@ def predict():
     #Result
     if prediction == 1:
         result = "High Risk of Diabetes" 
+        # ai_response = ask_ai(input_dict, result)
     else:
         result = "Low Risk of Diabetes" 
 
     return render_template("index.html", prediction = result, probability = round(prob, 2), recommendation = rec)
+
+
+#For Chatbot
+@app.route("/chat", methods=["POST"])
+def chat():
+
+    data = request.get_json()
+
+    question = data["question"]
+
+    # You can later pass patient data here too
+    patient_data = {}
+
+    prediction = ""
+
+    answer, sources = ask_ai(
+        patient_data,
+        prediction,
+        question
+    )
+
+    return jsonify({
+        "answer": answer,
+        "sources": sources
+    })
+
 
 if __name__ == "__main__":
     app.run(debug= True, use_reloader = True, threaded=False)
