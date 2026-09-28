@@ -83,7 +83,8 @@
 
                     <div class="col-md-6 mb-3">
                         <label>BMI</label>
-                        <input type="number" step="0.1" name="BMI" class="form-control" placeholder="Enter BMI (weight in kg/(height in m)^2)" required>
+                        <input type="number" step="0.1" name="BMI" class="form-control"
+                            placeholder="Enter BMI (weight in kg/(height in m)^2)" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
@@ -139,6 +140,34 @@
                     <li>{{ item }}</li>
                     {% endfor %}
                 </ul>
+                <hr>
+
+                <hr>
+
+                <h3>🤖 AI Health Assistant (RAG)</h3>
+
+                <div class="mb-3">
+                    <textarea id="question" class="form-control" rows="4"
+                        placeholder="Example: What foods should I avoid if I have diabetes?"></textarea>
+                </div>
+
+                <div class="text-center">
+                    <button id="askBtn" class="btn btn-success">
+
+                        Ask AI
+
+                    </button>
+                </div>
+
+                <br>
+
+                <div id="loading" style="display:none;">
+                    <p class="text-primary">Thinking...</p>
+                </div>
+
+                <div id="answer"></div>
+
+                <div id="sources"></div>
             </div>
             {% endif %}
 
@@ -146,6 +175,106 @@
 
     </div>
 
+
+    <script>
+
+        document.getElementById("askBtn").addEventListener("click", async function () {
+
+            const question = document.getElementById("question").value;
+
+            if (question.trim() === "") {
+                alert("Please enter a question.");
+                return;
+            }
+
+            document.getElementById("loading").style.display = "block";
+
+            try {
+
+                const response = await fetch("/chat", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        question: question
+
+                    })
+
+                });
+
+                const data = await response.json();
+
+                document.getElementById("loading").style.display = "none";
+
+                document.getElementById("answer").innerHTML = `
+
+            <div class="alert alert-info">
+
+                <h5>AI Answer</h5>
+
+                <p>${data.answer}</p>
+
+            </div>
+
+        `;
+
+                let html = "";
+
+                if (data.sources && data.sources.length > 0) {
+
+                    html += `
+                <div class="card mt-3">
+                    <div class="card-body">
+
+                        <h5>Sources</h5>
+
+                        <ul>
+            `;
+
+                    data.sources.forEach(source => {
+
+                        html += `<li>${source}</li>`;
+
+                    });
+
+                    html += `
+                        </ul>
+
+                    </div>
+                </div>
+            `;
+                }
+
+                document.getElementById("sources").innerHTML = html;
+
+            }
+
+            catch (error) {
+
+                document.getElementById("loading").style.display = "none";
+
+                document.getElementById("answer").innerHTML = `
+
+            <div class="alert alert-danger">
+
+                Error connecting to AI Assistant.
+
+            </div>
+
+        `;
+
+                console.log(error);
+
+            }
+
+        });
+
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,13 @@
+.git
+.venv
+venv
+__pycache__
+*.py[cod]
+*.ipynb
+.env
+.env.*
+!.env.example
+.devcontainer
+documents
+report_generator.py
+diabetes.csv
