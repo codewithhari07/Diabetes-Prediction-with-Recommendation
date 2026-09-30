@@ -2,7 +2,7 @@
 
 A Flask web application that estimates diabetes risk from eight health measurements and displays lifestyle recommendations. It also includes an optional AI health assistant that answers questions using a small, locally stored FAISS knowledge index and Google Gemini.
 
-**Demo:** [diabetes-prediction-with-recommendation-production.up.railway.app]
+**Demo:** [Diabetes Prediction](diabetes-prediction-with-recommendation-production.up.railway.app)
 
 > **Health information:** This project is for learning and demonstration. Its output is not a medical diagnosis and should not replace advice from a qualified healthcare professional. Do not make health decisions based only on this application.
 
